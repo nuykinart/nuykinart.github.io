@@ -2,113 +2,87 @@
 <html lang="ru">
 <head>
     <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
-    
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         .cat-container {
-          top: 150px;
-          position: relative;
-          width: 400px;
-          height: 200px;
-          font-size: 8px;
-          line-height: 8px;
-          font-family: monospace;
-          background-color: transparent;
-        }
+            top: -100px;
+            left: -50px;
 
-        .ascii-cat {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          white-space: pre;
-        }
-
-        .ascii-cat pre {
-          background-color: transparent;
-          border: none;
+            position: relative;
+            width: 400px;
+            height: 200px;
+            font-size: 8px;
+            line-height: 8px;
+            font-family: monospace;
+            background-color: transparent;
         }
 
         .z-container {
-          position: absolute;
-          top: 0px;
-          left: 370px;
+            position: relative;
+            top: -400px;
+            left: 400px;
         }
 
         .z {
-          position: absolute;
-          top: 0px;
-          left: 30px;
-          font-size: 14px;
-          font-weight: bold;
-          color: #666;
-          animation: floatZ 3s infinite;
+            position: absolute;
+            top: 0px;
+            left: 30px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #666;
+            animation: floatZ 3s infinite;
+        }
+
+        .party-cat {
+            position: relative;
+            top: 0px;
+            left: 0px;
+            transform:  scale(0.45);
         }
 
 
         @keyframes floatZ {
-          0% {
-            opacity: 0;
-            transform: translateY(0);
-          }
-          50% {
-            opacity: 1;
-            transform: translateY(-50px);
-          }
-          100% {
-            opacity: 0;
-            transform: translateY(-100px);
-          }
+            0% {
+                opacity: 0;
+                transform: translateY(0);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-50px);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
         }
+
         @media (max-width: 500px) {
-          .cat-container {
-            top: 0px;
-            font-size: 4px;
-            line-height: 4px;
-          }
+            body {
+                overflow: hidden;
+            }
 
-          .z-container {
-            left: 190px;
-            top: 90px;
-          }
+            .cat-container {
+                transform: scale(0.6);
+                transform-origin: top left;
+            }
 
-          .z {
-            left: 10px;
-            font-size: 8px;
-          }
+            .z-container {
+                transform: scale(0.6);
+                transform-origin: top left;
+            }
+
         }
     </style>
     <title>Владимир Нуйкин</title>
 </head>
 <body>
 <div class="cat-container">
-    <div class="ascii-cat">
-      <pre>
-
-                                ▗▗▞▞▞▟▀▀▚▘▌▀▚▀▞▄▄▄▖▖                   ▗
-                             ▄▐▐▚▌▌▌▌▌▛▀▄▚▚▀▌▛▄▄▚▄▚▀▀▀▜▚▚▐▗       ▗▖▄▄▘ ▖  ▖
-                          ▗▞▀▖▙▙▌▙▜▐▞▌▛▜▐▙▛▜▟▜▚▙▀▞▖▚▀▝ ▝▝▞▐▐▀▛▟▐▞▛▄▞▄▞▘▘▗▗ ▝▛▄▖▖
-                        ▗▞▚▞▛▛▟▄▜▞▙▜▐▐▐▖▙▄▀▙▞▞▌▞▜▐▐▗▝▝▝▖▖▝▝▝▚▚▙▜▜▐▄▜▐▐▗     ▐▚▞▟▄
-                      ▄▐▚▀▙▚▙▜▟▞▙▜▐▟▟▞▘▀▖▖▀▄▚▀▛▛▙▜▐▘▀▞▞▖▞▝▐▝▝▞▞▌▛▞▞▞▜▐▖▗   ▗ ▜▞▄▄▙▚▄▗
-                     ▄▖▚▞█▀▀▞▌▌▙▌▙▜▐▄▐▐▚▚▀▚▄▚▜▞▀▛▜▜▟▌▌▌▌▚▀▄▄▙▘▚▀▙▀▀▛▌▌▛  ▘▝ ▖▖▜▟▞▟▚▙▙▛▙▚▖         ▗▗
-                    ▗▌▞▞▞▄▛▜▟▟▞▙▘▌▚▙▄▙▙▙▙▀▙▟▞▌▛▜▜▜▙▄▚▚▚▝▖▌▙▟▐▗▗▀▞▛▀▙▌▛▌▝▚▝ ▌▄▚▞▄▀▜▖▌▟▜▞▌█▄▖▖▖   ▗▝▗
-                    ▙▙▌▌▙▚▐▚▄▄▞▞▞▞▚▞▟▞▄▐▐▜▐▄▀▞▞▚▀▌▙▙▙▚▞▞▟▟▚▚▗▝▄▛▟▀▚▚▚▛▙▐▝▐▗▄▗▘▚▗▀▞▄▜▛▀▟▐▙▙▛▚ ▘▗▝ ▗
-                   ▜▄▌▌▙▄▚▀▞▗▖▌▌█▜▚▚▚▜▐▐▐▞▙▙▚▚▚▚▀▌▙▌▛█▜█▜▝▐▝▞▟▟█▛▞▖▀▙▛▞▖▚▚▝▖▄▀▚▚▀▐▌▀▜▜▚▙▘▌▌▚▘▖ ▖▝
-                  ▟▙▚▟▐▗▐▐▐▝▘▖▌▀▞▛▟▐▜▜▜▐▐▟▙▌▌▌▞▞▞▛▙▛█▛█▟▚▜▐▜▟█▙▚▚▌▌▛▟▀▞▞▞▗▘▌▄▀▞▞▞▟▞▜▜▜▐▞▜▝▞▘▌▞▖▖▞
-                  ▙▄▌▌▞▗  ▖▝▖▞▝▙▀▟▚▜▞▜▐▞█▟▞▞▌▙▙▙▜█▙▛█▞▙▛▛▞▛█▜▟▟▐▞▞▞██▜▚▙▄▗▐▗ ▌▙▝▞▐▗▛▞▛▐▞▘▛▞▞▗▗▝▖
-                 ▝▙▄▌▌▘▗▝▗▝▌▄▐▀▗▜▗▜▙▜▐▚▚▜▟▞▙▙▚▙▟▜▟▟▟▙▛▙▛▛▛██▛▟▞▞▟▐▟▜██▖▖▘▛▀▗▝▗▘▝▛▐▐▌▛▌▌▌▛▞▌▌▚▗▐
-                 ▟▞▌▖▘▘▖▞▌▘▚▗▘▞▜▟▟▐▞▜▐▞▜▚▌▛▄▞▚▙▙▛▛▟▟▟▟▛▛▙▛▛▙█▄▚▙▌▙▜▛██▞▖▖ ▌▘▝▄▝▝▘▚▚▀▌▙▜▚▝▞▞▞▐▗▘
-                 ▄▛▛▗▀▞▄▚▗▀▗▗▖▞▝▄▚▙▀▌▛▞▌▙▚▀▌▛▙▙▚▜▀▙▙▙▙▛▛▟▟▜▜▙▙▙▞▟▚█▟▙█▚▚▖▖▝▀▌▖▀▖ ▘▖▛▐▗▀ ▚▚▗▐▝▞▖
-                 ▐▞▞▖▌▌▖▖▖▞ ▖ ▘▚▝▝▞▛▜▀▛▟▟▀▛▌▙▚▙▛▛▛▟▟▐▟▞▛▌▛█▜▟▟▟▟▜▚▙▙█▟▜▚▝▄▝▐▐▐ ▐ ▝▗▚▘ ▞▝▄▖▄▟▝▞
-                 ▚▐▝▝▐▐▖▌▞▗▗ ▘▀ ▌▙▖▞▚▜▜▚▙▛▛▛▟▚▚▀▛▛▌▙▜▐▞▙▜▞▛▛▟▟▟▜▜▜▟▟▟▟▙▀▌▖▘▘▖▘▚▜ ▘▚▄▗▛▝▀▗▗▗▐▜▝
-                 ▚▝▞▝▚▙▚▜▐▖▖▞▐▐▝▖▖▞▐▗▗▖▚▘▞▗▘▘▀▝▘▚▀▐▝▀▌▌▌▌▀▝▝▝▐▟█▛▌▄▝▀▙▙▛█▞▝ ▖▘▘▚▚▘▖▖▛▖▐▐▞▞▞ ▙▘
-                 ▗▘▘▘▚▄▙▛▟▐▗▞▌▌▌▚▚▚▘▚▚▞▞▖▞▄▚▀▞▜▝▖▜▞▝▝▖▖▞▞▌▌▌▘▚▗▗▐█▟▐▚▚▙█▚▜▝  ▘▘▚▚▚▗▜▐▝▖▚▘▘▖▚
-                  ▀▞▝▗▞▄▌▙▌▛▞▛▞▞▙▄▞▞▌▙▚▞▐▞▞▚▚▚▌▌▀▌▛▀▀▗▚▞▟▟▚▌▛▙▞▄▜▟▛▙▙▚▜██▞█▌▘▘▘▝▚▚▙▌▘▚▗▘▝▀▀▚▀▖▖▗
-                  ▘▌▖▖▌▌▞▞▟▜▜▞▙▚▚▖▞▄▀▞▙▘▚▐▞▌▌▙▙▞▚▙▛▛▛▛▙▟▟▙█▜▛█▟▚████▟█▙███▟▜▚▘▘▖▟▙  ▝▖▗▝▞▞▀▌▘ ▖▗▝▗
-                   ▚▖ ▚▘▞▐▖▞▞▛▙▛▌▙▜▄▜▚▙▀▛▌▛▟▞▄▟▟▙▄██▛▛█▟▙██████▛▛▛█▛▙▙▛██████▝▝▗▐ ▚▝▖▄▟▟▟▐▐▟▝▗▗▗▘▖
-                    ▞▝▗▘▞▄▗▖▖▚▐▐▐▚▙▚▜▜▟▜▞▞▛▙▛▛█▟▙▛▙▜▟▜▜▜▀▟▐▐▐▜▙▛▀▀▛█▌▄▜▜▜▜▜▀▛▜▝▗▗▝▖▌▛▛▛▜▞▛▙▚▝▖▖▌▘▘
-      </pre>
+    <div class="party-cat">
+        <img src="/assets/images/party_cat.png" alt="Cat">
     </div>
+
     <div class="z-container">
         <div class="z">Z</div>
         <div class="z" style="animation-delay: 0.5s; left: 40px;">Z</div>
