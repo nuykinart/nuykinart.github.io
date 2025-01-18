@@ -1,94 +1,12 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        .cat-container {
-            top: -100px;
-            left: -50px;
-
-            position: relative;
-            width: 400px;
-            height: 200px;
-            font-size: 8px;
-            line-height: 8px;
-            font-family: monospace;
-            background-color: transparent;
-        }
-
-        .z-container {
-            position: relative;
-            top: -400px;
-            left: 400px;
-        }
-
-        .z {
-            position: absolute;
-            top: 0px;
-            left: 30px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #666;
-            animation: floatZ 3s infinite;
-        }
-
-        .party-cat {
-            position: relative;
-            top: 0px;
-            left: 0px;
-            transform:  scale(0.45);
-        }
-
-
-        @keyframes floatZ {
-            0% {
-                opacity: 0;
-                transform: translateY(0);
-            }
-            50% {
-                opacity: 1;
-                transform: translateY(-50px);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-100px);
-            }
-        }
-
-        @media (max-width: 500px) {
-            body {
-                overflow: hidden;
-            }
-
-            .cat-container {
-                transform: scale(0.6);
-                transform-origin: top left;
-            }
-
-            .z-container {
-                transform: scale(0.6);
-                transform-origin: top left;
-            }
-
-        }
-    </style>
-    <title>Владимир Нуйкин</title>
+    <title>Fishing</title>
 </head>
 <body>
-<div class="cat-container">
-    <div class="party-cat">
-        <img src="/assets/images/party_cat.png" alt="Cat">
-    </div>
-
-    <div class="z-container">
-        <div class="z">Z</div>
-        <div class="z" style="animation-delay: 0.5s; left: 40px;">Z</div>
-        <div class="z" style="animation-delay: 1s; left: 60px;">Z</div>
-    </div>
-
-</div>
+    <img src="/assets/images/fishing.jpg" alt="Fishing" style="width: 50%; height: auto;">
 </body>
 </html>
