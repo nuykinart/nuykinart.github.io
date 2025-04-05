@@ -2,8 +2,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // === Image dimensions ===
     const container = document.querySelector('.image-container');
     const imageWrappers = document.querySelectorAll('.image-wrapper');
-    const baseContainerWidth = 1366;
+    const baseContainerWidth = 1366 * 2;
 
+    const addHoverListeners = (wrapper) => {
+        if (wrapper.classList.contains('no-hover')) return;
+
+        const handleMouseEnter = () => {
+            wrapper.dataset.hovered = 'true';
+            calculateSizes(); // Пересчет при наведении
+        };
+
+        const handleMouseLeave = () => {
+            wrapper.dataset.hovered = 'false';
+            calculateSizes(); // Пересчет при уходе
+        };
+
+        wrapper.addEventListener('mouseenter', handleMouseEnter);
+        wrapper.addEventListener('mouseleave', handleMouseLeave);
+    };
     // Size calculation function
     const calculateSizes = () => {
         const currentWidth = container.clientWidth;
@@ -13,8 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const img = wrapper.querySelector('img');
             if (!img?.dataset.originalWidth) return;
 
-            wrapper.style.width = `${img.dataset.originalWidth * scaleFactor}px`;
-            wrapper.style.height = `${img.dataset.originalHeight * scaleFactor}px`;
+            let width = img.dataset.originalWidth * scaleFactor;
+            let height = img.dataset.originalHeight * scaleFactor;
+
+            if (wrapper.dataset.hovered === 'true') {
+                width *= 1.05;
+                height *= 1.05;
+            }
+
+            wrapper.style.width = `${width}px`;
+            wrapper.style.height = `${height}px`;
         });
     };
 
@@ -22,6 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
     imageWrappers.forEach(wrapper => {
         const img = wrapper.querySelector('img');
         if (!img) return;
+
+        addHoverListeners(wrapper);
 
         const initImage = () => {
             img.dataset.originalWidth = img.naturalWidth;
@@ -67,7 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.putImageData(imageData, 0, 0);
             img.dataset.tintedSrc = canvas.toDataURL();
 
-            // Save original src only once
             if (!img.dataset.originalSrc) {
                 img.dataset.originalSrc = img.src;
             }
@@ -79,6 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hover handlers
     imageWrappers.forEach(wrapper => {
+        if (wrapper.classList.contains('no-hover')) return;
+
         const img = wrapper.querySelector('img');
         if (!img) return;
 
@@ -87,7 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!img.complete) {
                 img.addEventListener('load', () => {
                     createTintedVersion(img);
-                    // Add handlers only after loading
                     addHoverHandlers(wrapper, img);
                 });
                 return;
@@ -98,27 +124,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Adding event handlers
         const addHoverHandlers = (wrapper, img) => {
-            const handleMouseEnter = () => {
+            const handleEnter = () => {
                 if (img.dataset.tintedSrc) {
                     img.src = img.dataset.tintedSrc;
                 }
             };
 
-            const handleMouseLeave = () => {
+            const handleLeave = () => {
                 if (img.dataset.originalSrc) {
                     img.src = img.dataset.originalSrc;
                 }
             };
 
-            // Remove old handlers before adding new ones
-            wrapper.removeEventListener('mouseenter', handleMouseEnter);
-            wrapper.removeEventListener('mouseleave', handleMouseLeave);
+            // Remove old handlers
+            wrapper.removeEventListener('mouseenter', handleEnter);
+            wrapper.removeEventListener('mouseleave', handleLeave);
+            wrapper.removeEventListener('touchstart', handleEnter);
+            wrapper.removeEventListener('touchend', handleLeave);
 
-            wrapper.addEventListener('mouseenter', handleMouseEnter);
-            wrapper.addEventListener('mouseleave', handleMouseLeave);
+            // Check for touch support
+            if ('ontouchstart' in window) {
+                // Touch devices
+                wrapper.addEventListener('touchstart', handleEnter);
+                wrapper.addEventListener('touchend', handleLeave);
+            } else {
+                // Non-touch devices
+                wrapper.addEventListener('mouseenter', handleEnter);
+                wrapper.addEventListener('mouseleave', handleLeave);
+            }
         };
 
         initTint();
     });
 });
-

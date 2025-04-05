@@ -1,0 +1,38 @@
+/*mobile version*/
+.desktop-layout {
+    display: block;
+}
+
+.mobile-stack {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .desktop-layout {
+        display: none !important;
+    }
+
+    .mobile-stack {
+        display: block;
+    }
+
+    .mobile-stack {
+        display: block;
+        padding: 15px;
+    }
+
+    .stack-item {
+        width: calc(100% - 40px);
+        margin: 20px auto;
+        padding: 15px;
+        border: 1px solid #000;
+        border-radius: 2px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background: white;
+
+    }
+
+    /*body {*/
+    /*    background: white;*/
+    /*}*/
+}

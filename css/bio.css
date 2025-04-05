@@ -1,0 +1,21 @@
+.content-placeholder {
+    text-align: left;
+    color: #000000;
+}
+
+.text-wrapper {
+    position: absolute;
+    transition: all 0.3s ease;
+    margin-right: 100px;
+}
+
+.text-wrapper p {
+    font-family:  'Geologica', sans-serif
+}
+
+/*header*/
+.text-wrapper:first-child p {
+    font-family: 'Shantell Sans', cursive;
+    font-style: italic;
+    font-weight: 500;
+}

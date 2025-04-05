@@ -1,0 +1,51 @@
+.image-wrapper {
+    --anim-scale: 1;
+    --anim-rotate: 0deg;
+    --anim-translate-x: 0px;
+    --anim-translate-y: 0px;
+    transition: all 0.3s ease;
+}
+
+@keyframes chaos-animation {
+    0% {
+        transform:
+                translate(0, 0)
+                rotate(0deg)
+                scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform:
+                translate(
+                        calc(var(--anim-translate-x) * 1.5),
+                        calc(var(--anim-translate-y) * 1.5)
+                )
+                rotate(var(--anim-rotate))
+                scale(var(--anim-scale));
+        opacity: 0.8;
+    }
+    100% {
+        transform:
+                translate(0, 0)
+                rotate(0deg)
+                scale(1);
+        opacity: 1;
+    }
+}
+
+.chaos-active {
+    animation: chaos-animation 3s cubic-bezier(0.68, -0.55, 0.27, 1.55) both;
+}
+
+body.fade-out {
+    animation: fadeOut 0.5s forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}

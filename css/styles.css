@@ -20,7 +20,7 @@ body {
     aspect-ratio: 1366/768;
     height: 0;
     padding-top: calc(768 / 1366 * 100%);
-    border: 1px solid red;
+    /*border: 1px solid red;*/
 }
 
 /* aspect-ratio support in modern browsers */
@@ -33,14 +33,18 @@ body {
 
 /* Image wrapper */
 .image-wrapper {
+    backface-visibility: hidden;
+    perspective: 1000px;
     position: absolute;
-    transition: transform 0.2s ease;
     transform-origin: center;
+    transition: transform 0.3s ease,
+    width 0.3s ease,
+    height 0.3s ease;
 }
 
-/* Image styles */
 .hover-image {
     display: block;
     width: 100%;
     height: auto;
+    transition: transform 0.3s ease; /* Добавили переход для изображения */
 }

@@ -5,28 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Нуйкин Владимир Дмитриевич</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/animation.css">
 </head>
 <body>
 
-<div class="image-container">
-    <div class="image-wrapper" style="top: 0%; left: 37%;">
-        <img src="/assets/images/main/miscellaneous.png" alt="Всякое" class="hover-image">
-    </div>
+<div class="desktop-layout">
+    <div class="image-container">
+        <div class="image-wrapper"
+             id="title-wrapper"
+             style="top: 10%; left:23%;"
+        >
+            <img src="/assets/images/main/title.png" alt="Сайт Владимира Дмитриевича" class="hover-image">
+        </div>
 
-    <div class="image-wrapper" style="top: 27%; left: 13%;">
-        <img src="/assets/images/main/graphics.png" alt="Графика" class="hover-image">
-    </div>
+        <div class="image-wrapper" style="top: 0%; left: 37%;" onclick="animateTransition('/misc.html')">
+            <img src="/assets/images/main/miscellaneous.png" alt="Всякое" class="hover-image">
+        </div>
 
-    <div class="image-wrapper" style="top: 60%; left: 34%;">
-        <img src="/assets/images/main/biography.png" alt="Биография" class="hover-image">
-    </div>
+        <div class="image-wrapper" style="top: 27%; left: 13%;" onclick="animateTransition('/graphics.html')">
+            <img src="/assets/images/main/graphics.png" alt="Графика" class="hover-image">
+        </div>
 
-    <div class="image-wrapper" style="top: 44.5%; left: 46%;">
-        <img src="/assets/images/main/painting.png" alt="Живопись" class="hover-image">
+        <div class="image-wrapper" style="top: 60%; left: 34%;" onclick="animateTransition('/bio.html')">
+            <img src="/assets/images/main/biography.png" alt="Биография" class="hover-image">
+        </div>
+
+        <div class="image-wrapper" style="top: 44.5%; left: 46%;"onclick="animateTransition('/painting.html')">
+            <img src="/assets/images/main/painting.png" alt="Живопись" class="hover-image">
+        </div>
     </div>
 </div>
 
-<script src="js/scripts.js"></script>
+<div class="mobile-stack">
+    <div class="stack-item"><img src="/assets/images/main/miscellaneous.png" alt="Всякое" class="hover-image"></div>
+    <div class="stack-item"><img src="/assets/images/main/graphics.png" alt="Графика" class="hover-image"></div>
+    <div class="stack-item"><img src="/assets/images/main/biography.png" alt="Биография" class="hover-image"></div>
+    <div class="stack-item"><img src="/assets/images/main/painting.png" alt="Живопись" class="hover-image"></div>
+</div>
+
+<script src="/js/main_scripts.js"></script>
+<script src="/js/animation.js"></script>
 
 </body>
 </html>
