@@ -1,0 +1,46 @@
+/* Main styles */
+body {
+    background-color: #fff7ec;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+/* Image container */
+.image-container {
+    position: relative;
+    max-width: 1366px;
+    margin: 2vh auto;
+    width: 95%;
+    aspect-ratio: 1366/768;
+    height: 0;
+    padding-top: calc(768 / 1366 * 100%);
+    border: 1px solid red;
+}
+
+/* aspect-ratio support in modern browsers */
+@supports (aspect-ratio: 16/9) {
+    .image-container {
+        height: auto;
+        padding-top: 0;
+    }
+}
+
+/* Image wrapper */
+.image-wrapper {
+    position: absolute;
+    transition: transform 0.2s ease;
+    transform-origin: center;
+}
+
+/* Image styles */
+.hover-image {
+    display: block;
+    width: 100%;
+    height: auto;
+}

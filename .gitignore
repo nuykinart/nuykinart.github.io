@@ -3,3 +3,5 @@ Gemfile.lock
 .idea/
 _site/
 .aider*
+
+assets/.DS_Store
