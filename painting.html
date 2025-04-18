@@ -4,23 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Живопись | Нуйкин Владимир Дмитриевич</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@300..700&family=Geologica:wght@100..900&family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap&subset=cyrillic"
+          rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/mobile.css">
     <link rel="stylesheet" href="/css/animation.css">
+    <link rel="stylesheet" href="/css/painting.css">
     <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
 </head>
 <body>
 
 <div class="desktop-layout">
     <div class="image-container">
-        <div class="image-wrapper" style="top: 0%; left: 20%;" onclick="animateTransition('/index.html')">
+        <div class="image-wrapper" style="top: 1%; left: 20%;" onclick="animateTransition('/index.html')">
             <img src="/assets/images/pictograms/main.png" alt="Главная" class="hover-image">
         </div>
-
-        <h1 class="biography-title">Живопись</h1>
-        <div class="content-placeholder">
-            <p>Страница в разработке</p>
+        <div class="image-wrapper" style="top: 1%; left: 50%;" onclick="animateTransition('/bio.html')">
+            <img src="/assets/images/pictograms/bio.png" alt="Биография" class="hover-image">
         </div>
+        <div class="image-wrapper" style="top: 1%; left: 60%;" onclick="animateTransition('/graphics.html')">
+            <img src="/assets/images/pictograms/graphics.png" alt="Графика" class="hover-image">
+        </div>
+        <div class="image-wrapper" style="top: 1%; left: 70%;" onclick="animateTransition('/painting.html')">
+            <img src="/assets/images/pictograms/painting.png" alt="Живопись" class="hover-image">
+        </div>
+        <div class="image-wrapper" style="top: -1%; left: 80%;" onclick="animateTransition('/misc.html')">
+            <img src="/assets/images/pictograms/miscellaneous.png" alt="Всякое" class="hover-image">
+        </div>
+        <div class="content-placeholder">
+            <div class="text-wrapper"
+                 style="top: 2%; left: 27%;"
+                 data-original-font-size="62"
+            >
+                <p>Живопись</p>
+            </div>
+        </div>
+
+        <div class="gallery-container">
+            <div class="gallery-grid">
+                <!-- Пример работы -->
+                <div class="gallery-item">
+                    <a href="/assets/images/paintings/DSC_0008.jpeg" data-lightbox="gallery" data-title="Коломна">
+                        <img src="/assets/images/paintings/DSC_0008.jpeg" alt="Коломна">
+                    </a>
+                    <div class="image-info">
+                        <h3>Коломна</h3>
+                        <p>Акварель, шариковая ручка<br>Коломна, 2016</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <a href="/assets/images/paintings/DSC_0154.jpeg" data-lightbox="gallery" data-title="Дом у почты">
+                        <img src="/assets/images/paintings/DSC_0154.jpeg" alt="Дом у почты">
+                    </a>
+                    <div class="image-info">
+                        <h3>Дом у почты</h3>
+                        <p>Акварель, шариковая ручка<br>Сурск, сентябрь 2019</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <a href="/assets/images/paintings/DSC_0156.jpeg" data-lightbox="gallery" data-title="Улица Свердлова">
+                        <img src="/assets/images/paintings/DSC_0156.jpeg" alt="Улица Свердлова">
+                    </a>
+                    <div class="image-info">
+                        <h3>Улица Свердлова</h3>
+                        <p>Акварель, шариковая ручка<br>Сурск, 2019</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-bottom">
+            <div class="nav-item" data-category="archive">Архив</div>
+            <div class="nav-item" data-category="school">Училище 1967-1971</div>
+            <div class="nav-item" data-category="illustrations">Иллюстрации к Мастеру и Маргарите</div>
+        </nav>
 
     </div>
 </div>
@@ -34,6 +91,30 @@
 
 <script src="/js/main_scripts.js"></script>
 <script src="/js/animation.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+<script>
+    // Инициализация Lightbox с настройками
+    lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true,
+        'alwaysShowNavOnTouchDevices': true,
+        'disableScrolling': true,
+        'albumLabel': "Изображение %1 из %2"
+    });
 
+    // Обработка навигации
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+            // Здесь можно добавить загрузку разных категорий
+            const category = this.dataset.category;
+            loadCategory(category);
+        });
+    });
+
+    function loadCategory(category) {
+        // Логика загрузки разных категорий
+        console.log(`Загрузка категории: ${category}`);
+    }
+</script>
 </body>
 </html>
