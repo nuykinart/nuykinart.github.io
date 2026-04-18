@@ -4,4 +4,4 @@ Gemfile.lock
 _site/
 .aider*
 
-assets/.DS_Store
+.DS_Store

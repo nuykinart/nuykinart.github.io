@@ -1,0 +1,59 @@
+.graphics-header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff7ec;
+}
+
+.nav-icons {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.nav-icons .image-wrapper {
+    position: relative; /* Перебиваем absolute из styles.css */
+    width: 70px; /* Фиксированный размер для иконок */
+    height: auto;
+    cursor: pointer;
+}
+
+.nav-icons .image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.title-section {
+    text-align: center;
+}
+
+.title-section p {
+    font-family: 'Shantell Sans', cursive;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 40px;
+    margin: 0;
+    line-height: 1;
+}
+
+
+/* Сохраняем анимацию наведения */
+.nav-icons .image-wrapper:hover {
+    transform: scale(1.1);
+}
+
+/* Адаптивность для галереи */
+.gallery-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.gallery-grid {
+    margin-top: 20px !important; /* Перебиваем отступ из painting.css */
+}

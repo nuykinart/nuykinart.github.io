@@ -8,10 +8,10 @@ function animateTransition(url) {
 document.addEventListener('DOMContentLoaded', () => {
     const titleWrapper = document.getElementById('title-wrapper');
     const getRandomParams = () => ({
-        scale: 0.5 + Math.random() * 1.5,    // 0.5-2.0
-        rotate: (Math.random() * 720) - 360, // -360° до +720°
-        translateX: (Math.random() - 0.5) * 200, // -100px до +100px
-        translateY: (Math.random() - 0.5) * 200
+        scale: 0.5 + Math.random() * 0.5,    // 0.5-2.0
+        rotate: (Math.random() * 360) - 180,
+        translateX: (Math.random() - 0.5) * 100, // -100px до +100px
+        translateY: (Math.random() - 0.5) * 100
     });
 
     const startChaos = () => {
@@ -39,4 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
             wrapper.classList.remove('chaos-active');
         });
     });
+});
+
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        document.body.classList.remove('fade-out');
+    }
 });

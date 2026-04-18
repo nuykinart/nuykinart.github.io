@@ -11,3 +11,9 @@ Then, navigate to the root of the project and run:
 ```bash
 bundle exec jekyll serve
 ```
+
+# Thumbs
+
+```shell
+mogrify -path ./thumbs -resize 1200x1200 -quality 82 -format jpg ./*.jpg
+```

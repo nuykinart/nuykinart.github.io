@@ -58,7 +58,7 @@ h1 {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 25px;
     margin-bottom: 40px;
-    margin-top: 60px;
+    margin-top: 130px;
 }
 
 .gallery-item {
@@ -94,6 +94,16 @@ h1 {
 
 .gallery-item:hover .image-info {
     opacity: 1;
+}
+
+/* Настройка Lightbox2: Скрываем крестик */
+.lb-close {
+    display: none !important;
+}
+
+/* Скрываем подпись "Изображение X из Y" */
+.lb-number {
+    display: none !important;
 }
 
 /* Адаптив */
