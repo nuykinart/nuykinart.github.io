@@ -63,8 +63,44 @@
     aspect-ratio: 4 / 3;
 }
 
-.album-card img {
+.album-card .album-cover {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: filter 0.35s ease;
+}
+
+.album-card:hover .album-cover {
+    filter: brightness(0.7);
+}
+
+.album-previews {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    transform: translateY(100%);
+    transition: transform 0.35s ease;
+}
+
+.album-previews img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    height: auto;
+}
+
+.album-card:hover .album-previews {
+    transform: translateY(0);
+}
+
+.album-card .image-info {
+    opacity: 1;
+    top: 0;
+    bottom: auto;
+    background: linear-gradient(rgba(0,0,0,0.55), transparent);
+    padding-bottom: 30px;
 }

@@ -1,6 +1,6 @@
 albumsData.push({
     "id": "4",
-    "title": "4",
+    "title": "Альбом 4 (2014)",
     "cover": "4/cover.jpg"
 });
 

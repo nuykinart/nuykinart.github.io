@@ -50,10 +50,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         getUniqueAlbumIds().forEach(id => {
             const meta = getAlbumMeta(id);
+            const albumItems = data.filter(item => getAlbumId(item) === id);
+            const previewsHtml = albumItems.slice(0, 4)
+                .map(item => `<img src="${resolveThumbPath(item.file)}" alt="" loading="lazy">`)
+                .join('');
+
             const card = document.createElement('div');
             card.className = 'gallery-item album-card';
             card.innerHTML = `
-                <img src="${meta.cover}" alt="${meta.title}" loading="lazy">
+                <img class="album-cover" src="${meta.cover}" alt="${meta.title}" loading="lazy">
+                <div class="album-previews">${previewsHtml}</div>
                 <div class="image-info">
                     <h3>${meta.title}</h3>
                 </div>
