@@ -2,52 +2,90 @@ document.addEventListener('DOMContentLoaded', function() {
     const galleryGrid = document.querySelector('.gallery-grid');
     const navBottom = document.querySelector('.nav-bottom');
 
-    // Название переменной данных может зависеть от страницы, 
-    // но по умолчанию используем galleryData.
-    // Если на разных страницах разные переменные, можно сделать проверку.
     const data = typeof galleryData !== 'undefined' ? galleryData : [];
     const config = typeof galleryConfig !== 'undefined' ? galleryConfig : {};
+    const albums = typeof albumsData !== 'undefined' ? albumsData : [];
 
-    if (!galleryGrid || !navBottom || data.length === 0) return;
+    if (!galleryGrid || !navBottom) return;
 
-    // Рендеринг галереи
-    function renderGallery(filterTag = 'all') {
+    function getAlbumId(item) {
+        const slashIdx = item.file.indexOf('/');
+        return slashIdx !== -1 ? item.file.substring(0, slashIdx) : 'default';
+    }
+
+    function getUniqueAlbumIds() {
+        return Array.from(new Set(data.map(getAlbumId))).sort();
+    }
+
+    function resolveThumbPath(file) {
+        const lastSlash = file.lastIndexOf('/');
+        const thumbPath = lastSlash !== -1
+            ? `${file.substring(0, lastSlash)}/thumbs/${file.substring(lastSlash + 1)}`
+            : `thumbs/${file}`;
+        return (config.baseUrl && !thumbPath.startsWith('http') && !thumbPath.startsWith('/'))
+            ? config.baseUrl + thumbPath
+            : thumbPath;
+    }
+
+    function resolveFullPath(file) {
+        return (config.baseUrl && !file.startsWith('http') && !file.startsWith('/'))
+            ? config.baseUrl + file
+            : file;
+    }
+
+    function getAlbumMeta(id) {
+        const meta = albums.find(a => a.id === id);
+        const items = data.filter(item => getAlbumId(item) === id);
+        const coverFile = (meta && meta.cover) ? meta.cover : (items.length > 0 ? items[0].file : null);
+        return {
+            id,
+            title: meta ? meta.title : id,
+            cover: coverFile ? resolveThumbPath(coverFile) : null
+        };
+    }
+
+    function renderAlbums() {
+        navBottom.innerHTML = '';
         galleryGrid.innerHTML = '';
-        
-        const filteredData = filterTag === 'all' 
-            ? data 
-            : data.filter(item => item.tags.includes(filterTag));
 
-        // Добавляем проверку на наличие данных
-        if (filteredData.length === 0) {
+        getUniqueAlbumIds().forEach(id => {
+            const meta = getAlbumMeta(id);
+            const card = document.createElement('div');
+            card.className = 'gallery-item album-card';
+            card.innerHTML = `
+                <img src="${meta.cover}" alt="${meta.title}" loading="lazy">
+                <div class="image-info">
+                    <h3>${meta.title}</h3>
+                </div>
+            `;
+            card.addEventListener('click', () => renderAlbumView(id));
+            galleryGrid.appendChild(card);
+        });
+    }
+
+    function renderAlbumView(albumId) {
+        renderAlbumNav(albumId);
+        renderGallery(albumId, 'all');
+    }
+
+    function renderGallery(albumId, filterTag) {
+        galleryGrid.innerHTML = '';
+
+        const albumItems = data.filter(item => getAlbumId(item) === albumId);
+        const filtered = filterTag === 'all'
+            ? albumItems
+            : albumItems.filter(item => item.tags.includes(filterTag));
+
+        if (filtered.length === 0) {
             galleryGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 20px;">Нет изображений для этого тега.</div>';
             return;
         }
 
-        filteredData.forEach(item => {
+        filtered.forEach(item => {
             const galleryItem = document.createElement('div');
             galleryItem.className = 'gallery-item';
-            
-            // Если путь относительный и есть baseUrl в конфиге, добавляем его
-            let filePath = item.file;
-            let thumbPath = item.file;
-
-            // Логика для превью: файлы лежат в подпапке thumbs
-            // Например: "2014/image.jpg" -> "2014/thumbs/image.jpg"
-            const lastSlashIndex = item.file.lastIndexOf('/');
-            if (lastSlashIndex !== -1) {
-                const dir = item.file.substring(0, lastSlashIndex);
-                const name = item.file.substring(lastSlashIndex + 1);
-                thumbPath = `${dir}/thumbs/${name}`;
-            } else {
-                thumbPath = `thumbs/${item.file}`;
-            }
-
-            if (config.baseUrl && !filePath.startsWith('http') && !filePath.startsWith('/')) {
-                filePath = config.baseUrl + filePath;
-                thumbPath = config.baseUrl + thumbPath;
-            }
-
+            const filePath = resolveFullPath(item.file);
+            const thumbPath = resolveThumbPath(item.file);
             galleryItem.innerHTML = `
                 <a href="${filePath}" data-lightbox="gallery" data-title="${item.title}">
                     <img src="${thumbPath}" alt="${item.title}" loading="lazy">
@@ -60,14 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
             galleryGrid.appendChild(galleryItem);
         });
 
-        // Принудительно инициализируем Lightbox для новых элементов
-        if (typeof lightbox !== 'undefined') {
-            lightbox.init();
-        } else if (window.lightbox) {
-            window.lightbox.init();
-        }
-
-        // Если есть jQuery, можно попробовать еще один способ
+        if (typeof lightbox !== 'undefined') lightbox.init();
         if (typeof jQuery !== 'undefined') {
             jQuery('[data-lightbox]').off('click').on('click', function(e) {
                 if (typeof lightbox !== 'undefined') {
@@ -79,41 +110,38 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Рендеринг навигации (тегов)
-    function renderNav() {
+    function renderAlbumNav(albumId) {
         navBottom.innerHTML = '';
-        
-        // Кнопка "Все"
+
+        const backBtn = document.createElement('div');
+        backBtn.className = 'nav-item';
+        backBtn.textContent = '← Альбомы';
+        backBtn.addEventListener('click', () => renderAlbums());
+        navBottom.appendChild(backBtn);
+
         const allBtn = document.createElement('div');
         allBtn.className = 'nav-item';
         allBtn.textContent = 'Все';
         allBtn.addEventListener('click', () => {
-            renderGallery('all');
+            renderGallery(albumId, 'all');
             setActiveBtn(allBtn);
         });
         navBottom.appendChild(allBtn);
         setActiveBtn(allBtn);
 
-        // Получаем уникальные теги
         const tags = new Set();
-        data.forEach(item => {
-            item.tags.forEach(tag => tags.add(tag));
-        });
+        data.filter(item => getAlbumId(item) === albumId)
+            .forEach(item => item.tags.forEach(tag => tags.add(tag)));
 
-        // Сортируем теги
-        const sortedTags = Array.from(tags).sort((a, b) => {
-            // Если это года (числа), сортируем в обратном порядке
+        Array.from(tags).sort((a, b) => {
             if (!isNaN(a) && !isNaN(b)) return b - a;
             return a.localeCompare(b);
-        });
-
-        sortedTags.forEach(tag => {
+        }).forEach(tag => {
             const navItem = document.createElement('div');
             navItem.className = 'nav-item';
             navItem.textContent = tag;
-            navItem.dataset.category = tag;
             navItem.addEventListener('click', () => {
-                renderGallery(tag);
+                renderGallery(albumId, tag);
                 setActiveBtn(navItem);
             });
             navBottom.appendChild(navItem);
@@ -131,7 +159,5 @@ document.addEventListener('DOMContentLoaded', function() {
         activeBtn.style.color = 'white';
     }
 
-    // Инициализация
-    renderNav();
-    renderGallery('all');
+    renderAlbums();
 });

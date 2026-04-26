@@ -57,3 +57,14 @@
 .gallery-grid {
     margin-top: 20px !important; /* Перебиваем отступ из painting.css */
 }
+
+.album-card {
+    cursor: pointer;
+    aspect-ratio: 4 / 3;
+}
+
+.album-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
