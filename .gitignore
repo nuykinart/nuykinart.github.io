@@ -5,3 +5,7 @@ _site/
 .aider*
 
 .DS_Store
+
+tmp/
+
+.claude/

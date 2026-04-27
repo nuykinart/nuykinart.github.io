@@ -16,4 +16,5 @@ bundle exec jekyll serve
 
 ```shell
 mogrify -path ./thumbs -resize 1200x1200 -quality 82 -format jpg ./*.jpg
+exiftool -T -CreateDate -FileName . | sort -k1 | awk -F'\t' '{print $2}'
 ```
