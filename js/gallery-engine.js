@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (!galleryGrid || !navBottom) return;
 
+    let currentAlbumId = null;
+    let suppressEndStateUpdate = false;
+
     function getAlbumId(item) {
         const slashIdx = item.file.indexOf('/');
         return slashIdx !== -1 ? item.file.substring(0, slashIdx) : 'default';
@@ -44,7 +47,75 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
+    function parseHash() {
+        const hash = location.hash.slice(1);
+        if (!hash) return { view: 'root' };
+        const slashIdx = hash.indexOf('/');
+        if (slashIdx === -1) return { view: 'album', albumId: decodeURIComponent(hash), imageIndex: null };
+        const albumId = decodeURIComponent(hash.substring(0, slashIdx));
+        const imageIndex = parseInt(hash.substring(slashIdx + 1));
+        return { view: 'album', albumId, imageIndex: isNaN(imageIndex) ? null : imageIndex };
+    }
+
+    function openLightboxAt(imageIndex) {
+        const links = document.querySelectorAll('[data-lightbox]');
+        const idx = imageIndex - 1;
+        if (links[idx] && typeof lightbox !== 'undefined') {
+            lightbox.start(jQuery(links[idx]));
+        }
+    }
+
+    // Patch lightbox.end to sync URL when lightbox closes via UI/Escape
+    if (typeof lightbox !== 'undefined') {
+        const originalEnd = lightbox.end.bind(lightbox);
+        lightbox.end = function() {
+            originalEnd();
+            if (!suppressEndStateUpdate) {
+                const state = parseHash();
+                if (state.imageIndex != null) {
+                    history.pushState(null, '', `#${encodeURIComponent(state.albumId)}`);
+                }
+            }
+        };
+
+        const originalChangeImage = lightbox.changeImage.bind(lightbox);
+        lightbox.changeImage = function(imageIndex) {
+            originalChangeImage(imageIndex);
+            const state = parseHash();
+            if (state.view === 'album') {
+                history.replaceState(null, '', `#${encodeURIComponent(state.albumId)}/${imageIndex + 1}`);
+            }
+        };
+    }
+
+    window.addEventListener('popstate', () => {
+        const state = parseHash();
+        if (state.view === 'root') {
+            suppressEndStateUpdate = true;
+            if (typeof lightbox !== 'undefined') lightbox.end();
+            suppressEndStateUpdate = false;
+            renderAlbums();
+        } else if (state.view === 'album') {
+            if (state.imageIndex != null) {
+                if (currentAlbumId !== state.albumId) {
+                    renderAlbumView(state.albumId);
+                    setTimeout(() => openLightboxAt(state.imageIndex), 150);
+                } else {
+                    openLightboxAt(state.imageIndex);
+                }
+            } else {
+                suppressEndStateUpdate = true;
+                if (typeof lightbox !== 'undefined') lightbox.end();
+                suppressEndStateUpdate = false;
+                if (currentAlbumId !== state.albumId) {
+                    renderAlbumView(state.albumId);
+                }
+            }
+        }
+    });
+
     function renderAlbums() {
+        currentAlbumId = null;
         navBottom.innerHTML = '';
         galleryGrid.innerHTML = '';
 
@@ -64,12 +135,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h3>${meta.title}</h3>
                 </div>
             `;
-            card.addEventListener('click', () => renderAlbumView(id));
+            card.addEventListener('click', () => {
+                history.pushState(null, '', `#${encodeURIComponent(id)}`);
+                renderAlbumView(id);
+            });
             galleryGrid.appendChild(card);
         });
     }
 
     function renderAlbumView(albumId) {
+        currentAlbumId = albumId;
         renderAlbumNav(albumId);
         renderGallery(albumId, 'all');
     }
@@ -105,15 +180,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         if (typeof lightbox !== 'undefined') lightbox.init();
-        if (typeof jQuery !== 'undefined') {
-            jQuery('[data-lightbox]').off('click').on('click', function(e) {
-                if (typeof lightbox !== 'undefined') {
-                    e.preventDefault();
-                    lightbox.start(jQuery(this));
-                    return false;
-                }
-            });
-        }
+
+        jQuery('[data-lightbox]').off('click').on('click', function(e) {
+            if (typeof lightbox === 'undefined') return;
+            e.preventDefault();
+            const links = jQuery('[data-lightbox]').toArray();
+            const imageIndex = links.indexOf(this) + 1;
+            history.pushState(null, '', `#${encodeURIComponent(albumId)}/${imageIndex}`);
+            lightbox.start(jQuery(this));
+            return false;
+        });
     }
 
     function renderAlbumNav(albumId) {
@@ -122,7 +198,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const backBtn = document.createElement('div');
         backBtn.className = 'nav-item';
         backBtn.textContent = '← Альбомы';
-        backBtn.addEventListener('click', () => renderAlbums());
+        backBtn.addEventListener('click', () => {
+            history.pushState(null, '', location.pathname);
+            renderAlbums();
+        });
         navBottom.appendChild(backBtn);
 
         const allBtn = document.createElement('div');
@@ -165,5 +244,14 @@ document.addEventListener('DOMContentLoaded', function() {
         activeBtn.style.color = 'white';
     }
 
-    renderAlbums();
+    // Initial render based on URL hash
+    const initialState = parseHash();
+    if (initialState.view === 'album') {
+        renderAlbumView(initialState.albumId);
+        if (initialState.imageIndex != null) {
+            setTimeout(() => openLightboxAt(initialState.imageIndex), 150);
+        }
+    } else {
+        renderAlbums();
+    }
 });
