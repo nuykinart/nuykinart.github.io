@@ -1,29 +1,22 @@
+/**
+ * Collage pages (index, bio, painting, misc): scales absolutely-positioned
+ * images and text blocks proportionally to the container width, and applies
+ * a blue tint to interactive images on hover/touch.
+ *
+ * Pages without an .image-container (e.g. graphics) only get the tint effect.
+ */
+
+// Design width the original layout coordinates were authored against.
+const COLLAGE_BASE_WIDTH = 1366 * 2;
+
+// === Proportional image scaling ===
 document.addEventListener('DOMContentLoaded', () => {
-    // === Image dimensions ===
     const container = document.querySelector('.image-container');
     const imageWrappers = document.querySelectorAll('.image-wrapper');
-    const baseContainerWidth = 1366 * 2;
 
-    const addHoverListeners = (wrapper) => {
-        if (wrapper.classList.contains('no-hover')) return;
-
-        const handleMouseEnter = () => {
-            wrapper.dataset.hovered = 'true';
-            calculateSizes(); // Пересчет при наведении
-        };
-
-        const handleMouseLeave = () => {
-            wrapper.dataset.hovered = 'false';
-            calculateSizes(); // Пересчет при уходе
-        };
-
-        wrapper.addEventListener('mouseenter', handleMouseEnter);
-        wrapper.addEventListener('mouseleave', handleMouseLeave);
-    };
-    // Size calculation function
     const calculateSizes = () => {
-        const currentWidth = container.clientWidth;
-        const scaleFactor = currentWidth / baseContainerWidth;
+        if (!container) return;
+        const scaleFactor = container.clientWidth / COLLAGE_BASE_WIDTH;
 
         imageWrappers.forEach(wrapper => {
             const img = wrapper.querySelector('img');
@@ -42,12 +35,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Image initialization
     imageWrappers.forEach(wrapper => {
         const img = wrapper.querySelector('img');
         if (!img) return;
 
-        addHoverListeners(wrapper);
+        if (!wrapper.classList.contains('no-hover')) {
+            wrapper.addEventListener('mouseenter', () => {
+                wrapper.dataset.hovered = 'true';
+                calculateSizes();
+            });
+            wrapper.addEventListener('mouseleave', () => {
+                wrapper.dataset.hovered = 'false';
+                calculateSizes();
+            });
+        }
 
         const initImage = () => {
             img.dataset.originalWidth = img.naturalWidth;
@@ -58,18 +59,18 @@ document.addEventListener('DOMContentLoaded', () => {
         img.complete ? initImage() : img.addEventListener('load', initImage);
     });
 
-    // Resize
     window.addEventListener('resize', () => requestAnimationFrame(calculateSizes));
+});
 
-    // === Tint effect ===
+// === Hover tint effect ===
+document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d', {willReadFrequently: true});
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     const tintConfig = {
         target: [0, 72, 255],
         intensity: 1
     };
 
-    // Function to create tinted version
     const createTintedVersion = (img) => {
         try {
             if (!img.complete || img.naturalWidth === 0) return;
@@ -83,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = imageData.data;
 
             for (let i = 0; i < data.length; i += 4) {
-                if (data[i + 3] < 10) continue;
+                if (data[i + 3] < 10) continue; // skip transparent pixels
 
                 data[i] = data[i] * (1 - tintConfig.intensity) + tintConfig.target[0] * tintConfig.intensity;
                 data[i + 1] = data[i + 1] * (1 - tintConfig.intensity) + tintConfig.target[1] * tintConfig.intensity;
@@ -96,108 +97,63 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!img.dataset.originalSrc) {
                 img.dataset.originalSrc = img.src;
             }
-
         } catch (error) {
             console.error('Tint error:', error);
         }
     };
 
-    // Hover handlers
-    imageWrappers.forEach(wrapper => {
-        if (wrapper.classList.contains('no-hover')) return;
+    const addHoverHandlers = (wrapper, img) => {
+        const handleEnter = () => {
+            if (img.dataset.tintedSrc) {
+                img.src = img.dataset.tintedSrc;
+            }
+        };
 
+        const handleLeave = () => {
+            if (img.dataset.originalSrc) {
+                img.src = img.dataset.originalSrc;
+            }
+        };
+
+        if ('ontouchstart' in window) {
+            wrapper.addEventListener('touchstart', handleEnter);
+            wrapper.addEventListener('touchend', handleLeave);
+        } else {
+            wrapper.addEventListener('mouseenter', handleEnter);
+            wrapper.addEventListener('mouseleave', handleLeave);
+        }
+    };
+
+    document.querySelectorAll('.image-wrapper:not(.no-hover)').forEach(wrapper => {
         const img = wrapper.querySelector('img');
         if (!img) return;
 
-        // Tint initialization
         const initTint = () => {
-            if (!img.complete) {
-                img.addEventListener('load', () => {
-                    createTintedVersion(img);
-                    addHoverHandlers(wrapper, img);
-                });
-                return;
-            }
             createTintedVersion(img);
             addHoverHandlers(wrapper, img);
         };
 
-        // Adding event handlers
-        const addHoverHandlers = (wrapper, img) => {
-            const handleEnter = () => {
-                if (img.dataset.tintedSrc) {
-                    img.src = img.dataset.tintedSrc;
-                }
-            };
-
-            const handleLeave = () => {
-                if (img.dataset.originalSrc) {
-                    img.src = img.dataset.originalSrc;
-                }
-            };
-
-            // Remove old handlers
-            wrapper.removeEventListener('mouseenter', handleEnter);
-            wrapper.removeEventListener('mouseleave', handleLeave);
-            wrapper.removeEventListener('touchstart', handleEnter);
-            wrapper.removeEventListener('touchend', handleLeave);
-
-            // Check for touch support
-            if ('ontouchstart' in window) {
-                // Touch devices
-                wrapper.addEventListener('touchstart', handleEnter);
-                wrapper.addEventListener('touchend', handleLeave);
-            } else {
-                // Non-touch devices
-                wrapper.addEventListener('mouseenter', handleEnter);
-                wrapper.addEventListener('mouseleave', handleLeave);
-            }
-        };
-
-        initTint();
+        img.complete ? initTint() : img.addEventListener('load', initTint);
     });
 });
 
+// === Proportional text scaling ===
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.image-container');
     const textWrappers = document.querySelectorAll('.text-wrapper');
-    const baseContainerWidth = 1366 * 2;
 
-    const addHoverListeners = (wrapper) => {
-        const handleMouseEnter = () => {
-            wrapper.dataset.hovered = 'true';
-            calculateSizes();
-        };
-
-        const handleMouseLeave = () => {
-            wrapper.dataset.hovered = 'false';
-            calculateSizes();
-        };
-
-        wrapper.addEventListener('mouseenter', handleMouseEnter);
-        wrapper.addEventListener('mouseleave', handleMouseLeave);
-    };
+    if (!container || textWrappers.length === 0) return;
 
     const calculateSizes = () => {
-        const currentWidth = container.clientWidth;
-        const scaleFactor = currentWidth / baseContainerWidth;
+        const scaleFactor = container.clientWidth / COLLAGE_BASE_WIDTH;
 
         textWrappers.forEach(wrapper => {
             const baseSize = parseFloat(wrapper.dataset.originalFontSize);
-            let fontSize = baseSize * scaleFactor;
+            wrapper.style.fontSize = `${baseSize * scaleFactor}px`;
 
             const baseMaxWidth = parseFloat(wrapper.dataset.originalMaxWidth);
-            let maxWidth = baseMaxWidth * scaleFactor;
-
-            // if (wrapper.dataset.hovered === 'true') {
-            //     fontSize *= 1.01;
-            //     maxWidth *= 1.01;
-            // }
-
-            wrapper.style.fontSize = `${fontSize}px`;
-
             if (!isNaN(baseMaxWidth)) {
-                wrapper.style.maxWidth = `${maxWidth}px`;
+                wrapper.style.maxWidth = `${baseMaxWidth * scaleFactor}px`;
             }
         });
     };
@@ -213,8 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 wrapper.dataset.originalMaxWidth = computedMaxWidth;
             }
         }
-
-        addHoverListeners(wrapper);
     });
 
     calculateSizes();

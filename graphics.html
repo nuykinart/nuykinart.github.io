@@ -2,15 +2,15 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Графика | Нуйкин Владимир Дмитриевич</title>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@300..700&family=Geologica:wght@100..900&family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap&subset=cyrillic"
           rel="stylesheet">
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/mobile.css">
-    <link rel="stylesheet" href="/css/animation.css">
-    <link rel="stylesheet" href="/css/painting.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
-    <link rel="stylesheet" href="/css/graphics-layout.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/animation.css">
+    <link rel="stylesheet" href="/css/gallery.css">
+    <link rel="stylesheet" href="/css/graphics.css">
     <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -18,11 +18,11 @@
 <div class="desktop-layout">
     <div class="graphics-header-container">
         <div class="nav-icons">
-            <div class="image-wrapper" onclick="animateTransition('/index.html')" title="Главная" style="margin-right: 15px;">
+            <div class="image-wrapper home-icon" onclick="animateTransition('/index.html')" title="Главная">
                 <img src="/assets/images/pictograms/main.png" alt="Главная" class="hover-image">
             </div>
 
-            <div class="title-section"  style="margin-right: 150px; margin-bottom: 12px;">
+            <div class="title-section">
                 <p>Графика</p>
             </div>
 
@@ -56,16 +56,7 @@
 <script src="/js/albums/4.js"></script>
 <script src="/js/albums/5.js"></script>
 <script src="/js/gallery-engine.js"></script>
-<script src="/js/main_scripts.js"></script>
+<script src="/js/collage.js"></script>
 <script src="/js/animation.js"></script>
-<script>
-    lightbox.option({
-        'resizeDuration': 200,
-        'wrapAround': true,
-        'alwaysShowNavOnTouchDevices': false, // Отключаем постоянный показ на тач-устройствах
-        'disableScrolling': true,
-        'showImageNumberLabel': false // Скрываем метку с номером (дополнительно к CSS)
-    });
-</script>
 </body>
 </html>
